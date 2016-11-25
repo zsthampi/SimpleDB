@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="java.util.Map"/>
+<fullyQualifiedTypeName name="java.util.LinkedHashMap"/>
+<fullyQualifiedTypeName name="java.util.Map.Entry"/>
+<fullyQualifiedTypeName name="simpledb.log.BasicLogRecord"/>
+<fullyQualifiedTypeName name="simpledb.log.LogIterator"/>
+<fullyQualifiedTypeName name="simpledb.tx.recovery.LogRecordIterator"/>
+</qualifiedTypeNameHistroy>
