@@ -21,7 +21,7 @@ import simpledb.server.SimpleDB;
  * 
  * @author Edward Sciore
  */
-class LogRecordIterator implements Iterator<LogRecord> {
+public class LogRecordIterator implements Iterator<LogRecord> {
 	private LogIterator iter = (LogIterator) SimpleDB.logMgr().iterator();
 	// private Iterator<BasicLogRecord> iter = SimpleDB.logMgr().iterator();
 
