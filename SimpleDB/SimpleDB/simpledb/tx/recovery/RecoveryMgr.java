@@ -137,7 +137,8 @@ public class RecoveryMgr {
 	// }
 
 	private void doRecover() {
-		System.out.println("START DO_RECOVER()");
+		System.out.println("RECOVERY - START");
+		System.out.println("RECOVERY - UNDO PHASE");
 		Collection<Integer> committedTxs = new ArrayList<Integer>();
 		Collection<Integer> rolledbackTxs = new ArrayList<Integer>();
 
@@ -148,25 +149,28 @@ public class RecoveryMgr {
 				break;
 			else if (rec.op() == COMMIT) {
 				committedTxs.add(rec.txNumber());
+				System.out.println("ADD TXN TO COMMIT LIST - TXN NUMBER:"+rec.txNumber()+" RECORD:"+rec.toString());
 			} else if (rec.op() == ROLLBACK) {
 				rolledbackTxs.add(rec.txNumber());
+				System.out.println("ADD TXN TO ROLLBACK LIST - TXN NUMBER:"+rec.txNumber()+" RECORD:"+rec.toString());
 			} else if (!committedTxs.contains(rec.txNumber()) && !rolledbackTxs.contains(rec.txNumber())) {
 				rec.undo(txnum);
+				System.out.println("UNDO TXN - TXN NUMBER:"+rec.txNumber()+" RECORD:"+rec.toString());
 			}
 		}
-		System.out.println("SWITICHING MODE TO FORWARD START");
+		System.out.println("RECOVERY - REDO PHASE");
 		iter.switchModeToForward();
 		while (iter.hasNextForward()) {
 			LogRecord rec = iter.nextForward();
 			if (rec.op() == SETINT || rec.op() == SETSTRING) {
 				if (committedTxs.contains(rec.txNumber())) {
 					rec.redo(txnum);
+					System.out.println("REDO TXN - TXN NUMBER:"+rec.txNumber()+" RECORD:"+rec.toString());
 				}
 			}
 
 		}
-		System.out.println("SWITICHING MODE TO END");
-		System.out.println("START DO_RECOVER()");
+		System.out.println("RECOVERY - END");
 	}
 
 	/**

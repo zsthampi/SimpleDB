@@ -143,7 +143,7 @@ public class Transaction {
    public void setInt(Block blk, int offset, int val) {
       concurMgr.xLock(blk);
       Buffer buff = myBuffers.getBuffer(blk);
-      System.out.println("SETINT TRANS File Name: " +blk.fileName() + " Blk# " + blk.number() +" offset "+offset+" val "+val);
+      // System.out.println("SETINT TRANS File Name: " +blk.fileName() + " Blk# " + blk.number() +" offset "+offset+" val "+val);
       int lsn = recoveryMgr.setInt(buff, offset, val);
       buff.setInt(offset, val, txnum, lsn);
    }
@@ -164,7 +164,7 @@ public class Transaction {
    public void setString(Block blk, int offset, String val) {
       concurMgr.xLock(blk);
       Buffer buff = myBuffers.getBuffer(blk);
-      System.out.println("SET STRING TRANS File Name: " +blk.fileName() + " Blk# " + blk.number() +" offset "+offset+" val "+val);
+      // System.out.println("SET STRING TRANS File Name: " +blk.fileName() + " Blk# " + blk.number() +" offset "+offset+" val "+val);
       int lsn = recoveryMgr.setString(buff, offset, val);
       buff.setString(offset, val, txnum, lsn);
    }

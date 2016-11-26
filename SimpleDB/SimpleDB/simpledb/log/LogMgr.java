@@ -93,7 +93,6 @@ public class LogMgr implements Iterable<BasicLogRecord> {
 			flush(); // so move to the next block.
 			appendNewBlock();
 		}
-		System.out.println("Appenedd Data:"+currentblk.fileName() +" Blck "+currentblk.number() +" offset "+currentpos+" "+" size "+ (recsize - TWICE_INT_SIZE)  );
 		for (Object obj : rec)
 			appendVal(obj);
 		// Passing the size of the data to the function
@@ -169,11 +168,8 @@ public class LogMgr implements Iterable<BasicLogRecord> {
 	 * in the page.
 	 */
 	private void finalizeRecord(int dataSize) {
-		System.out.println("Inside finalizeRecord called with datasize: " + dataSize);
-		System.out.println("setint called with pos: " + currentpos + " data: " + getLastRecordPosition());
 		mypage.setInt(currentpos, getLastRecordPosition());
 		setLastRecordPosition(currentpos);
-		System.out.println("setint called with "+currentblk.fileName() +" Blck "+currentblk.number() +" offset pos"  + (currentpos - dataSize - INT_SIZE) + " data: " + (currentpos + INT_SIZE));
 		mypage.setInt((currentpos - dataSize - INT_SIZE), currentpos + INT_SIZE);
 		currentpos += INT_SIZE;
 		setFirstRecordPosition(currentpos);
@@ -185,7 +181,6 @@ public class LogMgr implements Iterable<BasicLogRecord> {
 	}
 
 	private void setLastRecordPosition(int pos) {
-		//System.out.println("Inside setLastRecordPosition writing with "+currentblk.fileName() +"Blck "+currentblk.number() +"offset pos"  +  LAST_POS + " data: " + pos);
 		mypage.setInt(LAST_POS, pos);
 	}
 
@@ -196,7 +191,6 @@ public class LogMgr implements Iterable<BasicLogRecord> {
 	}
 
 	private void setFirstRecordPosition(int pos) {
-		//System.out.println("Inside setFirstRecordPosition writing with "+currentblk.fileName() +"Blck "+currentblk.number() +"offset pos"  +  pos + " data: " + INT_SIZE);
 		mypage.setInt(pos, INT_SIZE);
 	}
 }

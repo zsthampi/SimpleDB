@@ -55,7 +55,7 @@ class SetIntRecord implements LogRecord {
 	 */
 	public int writeToLog() {
 		Object[] rec = new Object[] { SETINT, txnum, blk.fileName(), blk.number(), offset, oldVal, newVal };
-		System.out.println(toString());
+		//System.out.println(toString());
 		return logMgr.append(rec);
 	}
 

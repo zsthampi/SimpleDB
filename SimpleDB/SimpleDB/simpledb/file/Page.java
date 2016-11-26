@@ -129,8 +129,7 @@ public class Page {
     * @param val the integer to be written to the page
     */
    public synchronized void setInt(int offset, int val) {
-	   System.out.println("setint: offset: "+offset+" val "+ val);
-      contents.position(offset);
+	  contents.position(offset);
       contents.putInt(val);
    }
    
@@ -155,8 +154,7 @@ public class Page {
     * @param val the string to be written to the page
     */
    public synchronized void setString(int offset, String val) {
-	   System.out.println("setstring: offset: "+offset+" val "+ val);
-      contents.position(offset);
+	  contents.position(offset);
       byte[] byteval = val.getBytes();
       contents.putInt(byteval.length);
       contents.put(byteval);
