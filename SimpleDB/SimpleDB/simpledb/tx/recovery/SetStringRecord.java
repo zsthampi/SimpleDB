@@ -71,7 +71,7 @@ class SetStringRecord implements LogRecord {
 	}
 
 	public String toString() {
-		return "<SETSTRING " + txnum + " " + blk.fileName() + " blocknum " + blk.number()+" " + offset + " " + oldVal + newVal + ">";
+		return "<SETSTRING " + txnum + " " + blk.fileName() + " blocknum " + blk.number()+" " + offset + " " + oldVal + " || "+ newVal + ">";
 	}
 
 	/**

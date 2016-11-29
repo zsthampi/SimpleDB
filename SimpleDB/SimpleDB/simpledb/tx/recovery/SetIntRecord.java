@@ -68,7 +68,7 @@ class SetIntRecord implements LogRecord {
 	}
 
 	public String toString() {
-		return "<SETINT " + txnum + " " + blk.fileName() + " blocknum " + blk.number()+" " + offset + " " + oldVal + newVal + ">";
+		return "<SETINT " + txnum + " " + blk.fileName() + " blocknum " + blk.number()+" " + offset + " " + oldVal + " || " + newVal + ">";
 	}
 
 	/**
