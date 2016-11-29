@@ -7,7 +7,7 @@ public class BufferTest {
 
 	public static void main(String[] args) throws NullPointerException{
 		// TODO Auto-generated method stub
-		SimpleDB.init("tppDB");
+		SimpleDB.init("tpdb");
 		Block blk[] = new Block[10];
 		Buffer buff = new Buffer();
 		new SimpleDB();
@@ -15,7 +15,7 @@ public class BufferTest {
 	
 		System.out.println("Number of Block available " + basicBufferMgr.available());
 		for(int i=0;i<8;i++){
-			blk[i] = new Block("filename", i);
+			blk[i] = new Block("temp", i);
 			try {
 				buff = basicBufferMgr.pin(blk[i]);
 				//System.out.println("Block "+ i +" pinned");
@@ -24,6 +24,8 @@ public class BufferTest {
 			catch (BufferAbortException e) {System.out.println(e);}
 			System.out.println("Number of Block available " + basicBufferMgr.available());
 		}
+		blk[9] = new Block("temp", 9);
+		blk[8] = new Block("temp", 8);
 		
 		//System.out.println(basicBufferMgr.containsMapping(blk[0]));
 		buff = basicBufferMgr.getMapping(blk[5]);
@@ -38,17 +40,24 @@ public class BufferTest {
 		//System.out.println(basicBufferMgr.containsMapping(blk[0]));
 		System.out.println("Number of Block available " + basicBufferMgr.available());
 		
+		for(int i=0;i<10;i++){
+			System.out.println("Is " + blk[i].number()+ " is in pool: "+ basicBufferMgr.containsMapping(blk[i]));
+		}
 		
 		try{
-			blk[9] = new Block("filename", 9);
 			buff = basicBufferMgr.pin(blk[9]);
 			System.out.println(buff.block().number()+" is pinned");
-			blk[8] = new Block("filename", 8);
+			for(int i=0;i<10;i++){
+				System.out.println("Is " + blk[i].number()+ " is in pool: "+ basicBufferMgr.containsMapping(blk[i]));
+			}
 			buff = basicBufferMgr.pin(blk[8]);
 			System.out.println(buff.block().number()+" is pinned");
 			
 		}
 		catch (BufferAbortException e) {System.out.println(e);}
+		for(int i=0;i<10;i++){
+			System.out.println("Is " + blk[i].number()+ " is in pool: "+ basicBufferMgr.containsMapping(blk[i]));
+		}
 	}
 
 }
