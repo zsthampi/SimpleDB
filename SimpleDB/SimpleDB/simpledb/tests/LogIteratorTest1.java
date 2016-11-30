@@ -8,7 +8,7 @@ import simpledb.server.SimpleDB;
 import simpledb.tx.recovery.LogRecordIterator;
 import simpledb.tx.recovery.RecoveryMgr;
 
-public class LogIteratorTest {
+public class LogIteratorTest1 {
 
 	public static void main(String[] args) {
 		// Create a simpleDB client

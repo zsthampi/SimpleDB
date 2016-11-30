@@ -10,7 +10,7 @@ import simpledb.server.SimpleDB;
  *  pinned new blocks 9 and 8, and these will be pinned respectively
  *  at the first available buffer which is 2 and 5 respectively.
  */
-public class BufferTest {
+public class BufferTest1 {
 
 	public static void main(String[] args) throws NullPointerException{
 		// Create a simpleDB client
