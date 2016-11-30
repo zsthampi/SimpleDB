@@ -13,53 +13,65 @@ import simpledb.server.SimpleDB;
 public class BufferTest3 {
 
 	public static void main(String[] args) throws NullPointerException{
-		// TODO Auto-generated method stub
+		// Create a simpleDB client
 		SimpleDB.init("tpdb");
+		
+		// Initialize required objects and variables
 		Block blk[] = new Block[10];
 		Buffer buff = new Buffer();
 		new SimpleDB();
 		BufferMgr basicBufferMgr = SimpleDB.bufferMgr();
-	
 		System.out.println("Number of Block available " + basicBufferMgr.available());
+		
+		// Create 8 new blocks and pin them to the buffer
 		for(int i=0;i<8;i++){
 			blk[i] = new Block("temp", i);
 			try {
 				buff = basicBufferMgr.pin(blk[i]);
-				//System.out.println("Block "+ i +" pinned");
 				System.out.println(buff.block().number()+" is pinned");
 			}
-			catch (BufferAbortException e) {System.out.println(e);}
+			catch (BufferAbortException e) {System.out.println(e+ " | Buffer is full");}
 			System.out.println("Number of Block available " + basicBufferMgr.available());
 		}
 		
+		// Pin block 2 to the buffer again increasing it pin count to 2
 		try {
 			buff = basicBufferMgr.pin(blk[2]);
-			//System.out.println("Block "+ i +" pinned");
 			System.out.println(buff.block().number()+" is pinned");
 		}
-		catch (BufferAbortException e) {System.out.println(e);}
+		catch (BufferAbortException e) {System.out.println(e+ " | Buffer is full");}
 		System.out.println("Number of Block available " + basicBufferMgr.available());
 		
+		// Create 2 more blocks for testing later
 		blk[9] = new Block("temp", 9);
 		blk[8] = new Block("temp", 8);
 		
-		//System.out.println(basicBufferMgr.containsMapping(blk[0]));
+		/*
+		 *  Unpin block 5 and 2 from the buffer in that order
+		 *  block 2 will now have a pin count of 1
+		 */
 		buff = basicBufferMgr.getMapping(blk[5]);
 		basicBufferMgr.unpin(buff);
 		System.out.println(buff.block().number()+ " is unpinned");
-		//System.out.println(basicBufferMgr.containsMapping(blk[5]));
 		System.out.println("Number of Block available " + basicBufferMgr.available());
 		
 		buff = basicBufferMgr.getMapping(blk[2]);
 		basicBufferMgr.unpin(buff);
 		System.out.println(buff.block().number()+ " is unpinned");
-		//System.out.println(basicBufferMgr.containsMapping(blk[0]));
 		System.out.println("Number of Block available " + basicBufferMgr.available());
 		
+		// Even though blocks 5 and 2 have been unpinned they will be available in the buffer
 		for(int i=0;i<10;i++){
 			System.out.println("Is " + blk[i].number()+ " is in pool: "+ basicBufferMgr.containsMapping(blk[i]));
 		}
 		
+		/*
+		 * Now pin block 9 and block 8 in that order.
+		 * We will see in the buffer mapping that:
+		 * 1. Block 9 is added to the buffer by replacing block 5
+		 * 2. Block 8 gets timed out as no buffer will be available
+		 * This shows that FIFO technique maintains the pin count in the buffers
+		 */
 		try{
 			buff = basicBufferMgr.pin(blk[9]);
 			System.out.println(buff.block().number()+" is pinned");
@@ -70,7 +82,7 @@ public class BufferTest3 {
 			System.out.println(buff.block().number()+" is pinned");
 			
 		}
-		catch (BufferAbortException e) {System.out.println(e);}
+		catch (BufferAbortException e) {System.out.println(e+ " | Buffer is full");}
 		for(int i=0;i<10;i++){
 			System.out.println("Is " + blk[i].number()+ " is in pool: "+ basicBufferMgr.containsMapping(blk[i]));
 		}

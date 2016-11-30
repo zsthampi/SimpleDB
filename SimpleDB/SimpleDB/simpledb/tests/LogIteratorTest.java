@@ -11,26 +11,31 @@ import simpledb.tx.recovery.RecoveryMgr;
 public class LogIteratorTest {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		int lsn;
+		// Create a simpleDB client
 		SimpleDB.init("tpdb");
-		Block blk[] = new Block[10];
+		
+		// Initialize required objects and variables
+		int lsn;
+		Block blk[] = new Block[2];
 		Buffer buff = new Buffer();
 		new SimpleDB();
 		BufferMgr basicBufferMgr = SimpleDB.bufferMgr();
+		blk[0] = new Block("temp", 0);
+		blk[1] = new Block("temp", 1);
 		
-		for(int i=0;i<10;i++){
-			blk[i] = new Block("filename", i);
-		}
-		
+		// Pin block 0 and block 1 to the buffer
 		try {
 			buff = basicBufferMgr.pin(blk[0]);
 			System.out.println(buff.block().number()+" is pinned");
 			buff = basicBufferMgr.pin(blk[1]);
 			System.out.println(buff.block().number()+" is pinned");
 		}
-		catch (BufferAbortException e) {System.out.println(e);}
+		catch (BufferAbortException e) {System.out.println(e+ " | Buffer is full");}
 		
+		/* 
+		 * Create recovery manager object for dummy transaction number 124
+		 * add updates to the recovery manager object
+		 */
 		RecoveryMgr rm = new RecoveryMgr(124);
 		
 		buff = basicBufferMgr.getMapping(blk[0]);
@@ -47,11 +52,13 @@ public class LogIteratorTest {
 		lsn = rm.setString(buff, 4, "def");
 		buff.setString(4, "def", 124, lsn);
 		
+		// Runs the original log iterator to print the log in reverse direction
 		LogRecordIterator it = new LogRecordIterator();
 		while(it.hasNext()){System.out.println(it.next());}
 		
 		System.out.println("SWITCHING TO FORWARD!!!!!!");
 		
+		// Runs the new log iterator to print the log in forward direction
 		it.switchModeToForward();
 		while(it.hasNextForward()){System.out.println(it.nextForward());}
 			

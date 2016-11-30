@@ -15,7 +15,7 @@ import simpledb.file.FileMgr;
  *
  */
 class BasicBufferMgr {
-  private Map<Block, Buffer> bufferpool;
+  private Map<Block, Buffer> bufferPoolMap;
   private int numAvailable;
   private int maxSize;
 
@@ -35,7 +35,7 @@ class BasicBufferMgr {
     // ManualChanges
     numAvailable = numbuffs;
     maxSize = numbuffs;
-    bufferpool = new LinkedHashMap<Block, Buffer>();
+    bufferPoolMap = new LinkedHashMap<Block, Buffer>();
     // ManualChanges
   }
 
@@ -46,7 +46,7 @@ class BasicBufferMgr {
    *            the transaction's id number
    */
   synchronized void flushAll(int txnum) {
-    for (Buffer buff : bufferpool.values())
+    for (Buffer buff : bufferPoolMap.values())
       if (buff.isModifiedBy(txnum))
         buff.flush();
   }
@@ -68,7 +68,7 @@ class BasicBufferMgr {
       if (buff == null)
         return null;
       buff.assignToBlock(blk);
-      bufferpool.put(buff.block(), buff);
+      bufferPoolMap.put(buff.block(), buff);
     }
     if (!buff.isPinned())
       numAvailable--;
@@ -95,7 +95,7 @@ class BasicBufferMgr {
     numAvailable--;
     buff.pin();
     // Adding Buffer to the map
-    bufferpool.put(buff.block(), buff);
+    bufferPoolMap.put(buff.block(), buff);
     return buff;
   }
 
@@ -122,8 +122,8 @@ class BasicBufferMgr {
   }
 
   private Buffer findExistingBuffer(Block blk) {
-    if (bufferpool.containsKey(blk)) {
-      return bufferpool.get(blk);
+    if (bufferPoolMap.containsKey(blk)) {
+      return bufferPoolMap.get(blk);
     }
     return null;
   }
@@ -143,11 +143,11 @@ class BasicBufferMgr {
       }
     }*/
       
-    Iterator<Entry<Block, Buffer>> iter = bufferpool.entrySet().iterator();
+    Iterator<Entry<Block, Buffer>> iter = bufferPoolMap.entrySet().iterator();
       while(iter.hasNext()){
     	  Entry<Block, Buffer> buff = iter.next();
     	  if (!buff.getValue().isPinned()){
-    		  bufferpool.remove(buff.getKey());
+    		  bufferPoolMap.remove(buff.getKey());
     	      return buff.getValue();
     	  }
       }
@@ -165,7 +165,7 @@ class BasicBufferMgr {
    * @return true if there is a mapping; false otherwise
    */
   boolean containsMapping(Block blk) {
-    return bufferpool.containsKey(blk);
+    return bufferPoolMap.containsKey(blk);
   }
 
   /**
@@ -175,7 +175,7 @@ class BasicBufferMgr {
    * @return the buffer mapped to if there is a mapping; null otherwise
    */
   Buffer getMapping(Block blk) {
-    return bufferpool.get(blk);
+    return bufferPoolMap.get(blk);
   }
   
   //SGARG7 ADDED METHODS METIONED IN THE PROJECT DOCUMENT START
